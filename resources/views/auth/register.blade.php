@@ -83,7 +83,7 @@
 
                             <div class="text-center mt-4 font-weight-light">
                                 Already have an account?
-                                <a href="{{ route('login') }}" class="text-primary">Login</a>
+                                <a href="{{ route('login') }}" class="text-primary">Sign In</a>
                             </div>
 
                         </form>

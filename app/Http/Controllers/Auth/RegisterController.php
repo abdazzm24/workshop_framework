@@ -7,6 +7,10 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -68,5 +72,27 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        // Logout dulu supaya belum langsung masuk home
+        Auth::logout();
+
+        // Generate OTP angka (lebih aman)
+        $otp = rand(100000, 999999);
+
+        $user->update([
+            'otp' => $otp
+        ]);
+
+        Mail::raw("Kode OTP Registrasi Anda adalah: $otp", function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Kode OTP Registrasi');
+        });
+
+        session(['otp_user_id' => $user->id]);
+
+        return redirect()->route('otp.form');
     }
 }

@@ -21,21 +21,39 @@
             <li class="nav-item nav-profile dropdown">
               <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="nav-profile-img">
-                  <img src="assets/images/faces/face1.jpg" alt="image">
+                  <img src="{{ asset('assets/images/faces/face1.jpg') }}" alt="image">
                   <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                  <p class="mb-1 text-black">David Greymaax</p>
+                  <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
                 </div>
               </a>
+
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item" href="#">
-                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
+                  <i class="mdi mdi-cached me-2 text-success"></i> Activity Log
+                </a>
+
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
-                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+
+                <!-- SIGN OUT (Laravel Logout) -->
+                <a class="dropdown-item"
+                  href="{{ route('logout') }}"
+                  onclick="event.preventDefault(); document.getElementById('logout-form-navbar').submit();">
+                  <i class="mdi mdi-logout me-2 text-primary"></i> Sign Out
+                </a>
+
+                <!-- Hidden Logout Form -->
+                <form id="logout-form-navbar"
+                      action="{{ route('logout') }}"
+                      method="POST"
+                      class="d-none">
+                    @csrf
+                </form>
+
               </div>
             </li>
+
             <li class="nav-item d-none d-lg-block full-screen-link">
               <a class="nav-link">
                 <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>

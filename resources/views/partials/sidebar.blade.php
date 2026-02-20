@@ -21,31 +21,18 @@
                 </a>
                 </li>
 
-                <li class="nav-item" {{ Request::is('buku') ? 'active' : '' }}>
-                <a class="nav-link" href="{{ route('buku') }}">
+                <li class="nav-item" {{ Request::is('buku.index') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('buku.index') }}">
                     <span class="menu-title">Buku</span>
                     <i class="mdi mdi-book menu-icon"></i>
                 </a>
                 </li>
 
-                <li class="nav-item" {{ Request::is('kategori') ? 'active' : '' }}>
-                <a class="nav-link" href="{{ route('kategori') }}">
+                <li class="nav-item" {{ Request::is('kategori.index') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('kategori.index') }}">
                     <span class="menu-title">Kategori</span>
                     <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                 </a>
-                </li>
-
-                <li class="nav-item">
-                <a class="nav-link"
-                    href="{{ route('logout') }}"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <span class="menu-title">Logout</span>
-                    <i class="mdi mdi-logout menu-icon"></i>
-                </a>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
                 </li>
 
             </ul>

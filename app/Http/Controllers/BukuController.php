@@ -2,23 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Buku;
 
 class BukuController extends Controller
 {
-    public function kategori()
+    public function index()
     {
-        $kategori = DB::table('kategori')->get();
-        return view('kategori', compact('kategori'));
-    }
+        $buku = Buku::with('kategori')->get();
 
-    public function buku()
-    {
-        $buku = DB::table('buku')
-            ->join('kategori', 'buku.idkategori', '=', 'kategori.idkategori')
-            ->select('buku.*', 'kategori.nama_kategori')
-            ->get();
-
-        return view('buku', compact('buku'));
+        return view('buku.index', compact('buku'));
     }
 }
