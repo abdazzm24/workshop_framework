@@ -37,6 +37,10 @@
 <script src="{{ asset('assets/js/jquery.cookie.js') }}"></script>
 <script src="{{ asset('assets/js/dashboard.js') }}"></script>
 
+{{-- datatables --}}
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 {{-- JAVASCRIPT PAGE --}}
 @yield('js-page')
 

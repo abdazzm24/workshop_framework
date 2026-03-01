@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\Buku;
@@ -36,6 +37,19 @@ Route::get('/buku/{idbuku}', [BukuController::class, 'show'])->name('buku.show')
 Route::get('/buku/{idbuku}/edit', [BukuController::class, 'edit'])->name('buku.edit');
 Route::put('/buku/{idbuku}', [BukuController::class, 'update'])->name('buku.update');
 Route::delete('/buku/{idbuku}', [BukuController::class, 'destroy'])->name('buku.destroy');
+
+// BARANG ROUTES
+Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
+Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
+Route::post('/barang', [BarangController::class, 'store'])->name('barang.store');
+
+Route::post('/barang/cetak', [BarangController::class, 'cetak'])->name('barang.cetak');
+
+Route::get('/barang/{idbarang}', [BarangController::class, 'show'])->name('barang.show');
+Route::get('/barang/{idbarang}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+Route::put('/barang/{idbarang}', [BarangController::class, 'update'])->name('barang.update');
+Route::delete('/barang/{idbarang}', [BarangController::class, 'destroy'])->name('barang.destroy');
+
 
 // Google Authentication Routes
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');

@@ -89,7 +89,7 @@
             <td width="70%" style="border: none;">
                 Nomor &nbsp;&nbsp;&nbsp;: 002/ADM-BUKU/I/2026 <br>
                 Lampiran : - <br>
-                Perihal &nbsp;&nbsp;: Laporan Data Buku
+                Perihal &nbsp;&nbsp;: Laporan Data Buku 2
             </td>
             <td align="right" style="border: none;">
                 Surabaya, {{ date('d F Y') }}
