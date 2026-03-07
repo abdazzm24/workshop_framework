@@ -15,6 +15,19 @@
         <div class="main-panel">
             <div class="content-wrapper">
 
+                {{-- PAGE HEADER --}}
+                <div class="page-header">
+                    <h3 class="page-title">
+                        @yield('page-title')
+                    </h3>
+
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            @yield('breadcrumb')
+                        </ol>
+                    </nav>
+                </div>
+
                 {{-- CONTENT --}}
                 @yield('content')
 

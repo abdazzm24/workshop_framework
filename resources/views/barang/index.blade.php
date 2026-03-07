@@ -1,12 +1,28 @@
 @extends('layouts.app')
 
+@section('title', 'Data Barang')
+@section('page-title', 'Data Barang')
+@section('icon', 'mdi mdi-book-open-variant')
+
+@section('breadcrumb')
+<li class="breadcrumb-item"><a href="/home">Home</a></li>
+<li class="breadcrumb-item active" aria-current="page">Barang</li>
+@endsection
+
 @section('content')
 
-<div class="page-header">
-    <h3 class="page-title">Data Barang</h3>
+<div class="row">
+<div class="col-lg-12 grid-margin stretch-card">
+<div class="card">
+<div class="card-body">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <h4 class="card-title mb-0">Daftar Barang</h4>
+
     <div>
-        <a href="{{ route('barang.create') }}" class="btn btn-success">
-            + Tambah Barang
+        <a href="{{ route('barang.create') }}" class="btn btn-gradient-primary btn-sm">
+            Tambah Barang
         </a>
     </div>
 </div>
@@ -15,19 +31,23 @@
 <form action="{{ route('barang.cetak') }}" method="POST">
     @csrf
 
-    <div style="margin-bottom:15px;">
+    <div class="mb-3">
+
         <label>Koordinat X :</label>
-        <input type="number" name="x" min="1" max="6" required style="width:70px;">
+        <input type="number" name="x" min="1" max="8" required class="form-control d-inline-block mr-2" style="width:70px; height: 32px; opacity:0.8;">
 
-        <label>Koordinat Y :</label>
-        <input type="number" name="y" min="1" max="6" required style="width:70px;">
+        <label class="ml-2">Koordinat Y :</label>
+        <input type="number" name="y" min="1" max="5" required class="form-control d-inline-block ml-2" style="width:70px; height: 32px; opacity:0.8;">
 
-        <button type="submit" class="btn btn-primary btn-sm">
+        <button type="submit" class="btn btn-gradient-primary btn-sm ml-2">
             Cetak Label
         </button>
+
     </div>
 
-    <table class="table table-bordered" id="tableBarang">
+    <div class="table-responsive">
+
+    <table class="table table-hover" id="tableBarang">
         <thead>
             <tr>
                 <th>Pilih</th>
@@ -35,7 +55,7 @@
                 <th>Nama</th>
                 <th>Harga</th>
                 <th>Tanggal</th>
-                <th>Aksi</th>
+                <th width="180">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -48,24 +68,24 @@
                 </td>
 
                 <td>{{ $item->id_barang }}</td>
-                <td>{{ $item->nama }}</td>
-                <td>Rp {{ number_format($item->harga) }}</td>
+                <td><span class="badge badge-gradient-dark">{{ $item->nama }}</span></td>
+                <td><label class="badge badge-gradient-info">Rp {{ number_format($item->harga) }}</label></td>
                 <td>{{ $item->timestamp }}</td>
 
                 <td>
                     <a href="{{ route('barang.show', $item->id_barang) }}"
-                       class="btn btn-info btn-sm">
+                       class="btn btn-gradient-info btn-sm">
                         <i class="mdi mdi-eye"></i>
                     </a>
 
                     <a href="{{ route('barang.edit', $item->id_barang) }}"
-                       class="btn btn-warning btn-sm">
+                       class="btn btn-gradient-warning btn-sm">
                         <i class="mdi mdi-pencil"></i>
                     </a>
 
                     {{-- FORM DELETE DIPINDAHKAN KE LUAR --}}
                     <button type="button"
-                            class="btn btn-danger btn-sm"
+                            class="btn btn-gradient-danger btn-sm"
                             onclick="deleteBarang({{ $item->id_barang }})">
                         <i class="mdi mdi-delete"></i>
                     </button>
@@ -74,6 +94,7 @@
             @endforeach
         </tbody>
     </table>
+    </div>
 </form>
 
 {{-- FORM DELETE --}}
@@ -81,6 +102,11 @@
     @csrf
     @method('DELETE')
 </form>
+
+</div>
+</div>
+</div>
+</div>
 
 @endsection
 
@@ -106,4 +132,5 @@ function deleteBarang(id) {
         });
     });
 </script>
+
 @endsection

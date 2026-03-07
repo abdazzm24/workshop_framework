@@ -8,13 +8,20 @@ class Buku extends Model
 {
     protected $table = 'buku';
     protected $primaryKey = 'idbuku';
-    public $timestamps = false;
+    public $incrementing = true;
+    protected $keyType = 'int';
+    public $timestamps = true;
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     protected $fillable = [
-        'idkategori',
         'kode',
         'judul',
-        'pengarang'
+        'pengarang',
+        'idkategori'
     ];
 
     public function kategori()

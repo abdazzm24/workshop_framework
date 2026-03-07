@@ -42,5 +42,33 @@
                 </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('tabel.index') }}">
+                    <span class="menu-tittle">Tabel</span>
+                        <i class="mdi mdi-table menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('datatables.index') }}">
+                    <span class="menu-tittle">Datatables</span>
+                        <i class="mdi mdi-table-large menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('select.index') }}">
+                    <span class="menu-tittle">Select</span>
+                        <i class="mdi mdi-form-select menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('select2.index') }}">
+                    <span class="menu-tittle">Select 2</span>
+                        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                    </a>
+                </li>
+
             </ul>
 </nav>

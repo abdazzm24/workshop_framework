@@ -89,3 +89,14 @@ Route::get('/kategori/laporan/pdf', function () {
     return $pdf->download('laporan-kategori.pdf');
 });
 
+// sidebar table
+Route::get('/tabel', function () {return view('tabel.index');})->name('tabel.index');
+
+// sidebar datatables
+Route::get('/datatables', function () {return view('datatables.index');})->name('datatables.index');
+
+// sidebar select
+Route::get('/select', function () {return view('select.index');})->name('select.index');
+
+// sidebar select2
+Route::get('/select2', function () {return view('select2.index');})->name('select2.index');
