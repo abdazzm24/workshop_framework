@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\KasirController;
 use App\Models\Buku;
 use App\Models\Kategori;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -100,3 +102,40 @@ Route::get('/select', function () {return view('select.index');})->name('select.
 
 // sidebar select2
 Route::get('/select2', function () {return view('select2.index');})->name('select2.index');
+
+// ajax wilayah
+Route::get('/ajax-wilayah', function () {return view('ajax.wilayah');})->name('ajax.wilayah');
+
+// ajax kasir
+Route::get('/ajax-kasir', function () {return view('ajax.kasir');})->name('ajax.kasir');
+
+// axios wilayah
+Route::get('/axios-wilayah', function () {return view('axios.wilayah');})->name('axios.wilayah');
+
+// axios kasir
+Route::get('/axios-kasir', function () {return view('axios.kasir');})->name('axios.kasir');
+
+// API Wilayah
+
+// provinsi
+Route::get('/api/provinsi', function () {$response = Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json');return $response->json();});
+
+// kota
+Route::get('/api/kota/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$id.json");return $response->json();});
+
+// kecamatan
+Route::get('/api/kecamatan/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$id.json");return $response->json();});
+
+// kelurahan
+Route::get('/api/kelurahan/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$id.json");return $response->json();});
+
+// api barang
+Route::get('/api/barang', function () {
+    $barang = DB::table('barang')->get();
+    return response()->json($barang);
+
+});
+
+// bayar kasir
+Route::post('/kasir/bayar',[KasirController::class,'bayar']);
+
