@@ -8,9 +8,11 @@
 
     @include('partials.navbar')
 
-    <div class="container-fluid page-body-wrapper">
-
-        @include('partials.sidebar')
+    <div class="container-fluid page-body-wrapper @yield('no-sidebar-class')">
+        
+        @if (!View::hasSection('no-sidebar'))
+            @include('partials.sidebar')
+        @endif
 
         <div class="main-panel">
             <div class="content-wrapper">

@@ -94,7 +94,11 @@ class LoginController extends Controller
         $user->update(['otp' => null]);
         session()->forget('otp_user_id');
 
-        return redirect('/home');
+        if ($user->role == 'admin') {
+            return redirect('/home'); // admin
+        } else if ($user->role == 'vendor') {
+            return redirect('/vendor'); // vendor
+        }
     }
 
 }

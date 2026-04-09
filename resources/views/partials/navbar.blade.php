@@ -25,7 +25,11 @@
                   <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                  <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
+                  @if(Auth::check())
+                      <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
+                  @else
+                      <p class="mb-1 text-black">Guest</p>
+                  @endif
                 </div>
               </a>
 

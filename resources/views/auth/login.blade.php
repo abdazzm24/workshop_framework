@@ -77,7 +77,7 @@
 
                             <!-- Google Login Button -->
                             <div class="mb-2 mt-3 d-grid gap-2">
-                                <a href="#"
+                                <a href="{{ url('auth/google') }}"
                                    class="btn btn-block btn-danger auth-form-btn">
                                     <i class="mdi mdi-google me-2"></i>
                                     Connect using Google
@@ -88,6 +88,12 @@
                             <div class="text-center mt-4 font-weight-light">
                                 Don't have an account?
                                 <a href="{{ route('register') }}" class="text-primary">Create</a>
+                            </div>
+
+                            <div class="text-center mt-3 font-weight-light">
+                                <a href="{{ route('welcome') }}" class="text-primary">
+                                    ← Kembali
+                                </a>
                             </div>
 
                         </form>

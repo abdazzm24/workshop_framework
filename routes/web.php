@@ -8,13 +8,19 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\KasirController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PesananController;
 use App\Models\Buku;
 use App\Models\Kategori;
+use App\Models\Menu;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/', function () {return view('welcome');})->name('welcome');
+
 
 Auth::routes();
 
@@ -139,3 +145,52 @@ Route::get('/api/barang', function () {
 // bayar kasir
 Route::post('/kasir/bayar',[KasirController::class,'bayar']);
 
+// halaman vendor
+Route::get('/vendor', [VendorController::class, 'index'])->name('vendor.index');
+
+Route::post('/logout', function () {
+    Auth::logout(); return redirect('/');})->name('logout');
+
+
+// guest
+// ambil vendor
+Route::get('/api/vendor', function () {return \App\Models\Vendor::all();});
+    
+// ambil menu berdasarkan vendor
+Route::get('/api/menu/{idvendor}', function ($idvendor) {return \App\Models\Menu::where('idvendor', $idvendor)->get();});
+    
+Route::get('/', function () {$vendors = \App\Models\Vendor::all();return view('welcome', compact('vendors'));})->name('welcome'); 
+    
+// ADMIN VENDOR (khusus admin)
+Route::get('/adminvendor', [VendorController::class, 'adminIndex'])->name('adminvendor.index');
+Route::get('/adminvendor/create', [VendorController::class, 'create'])->name('adminvendor.create');
+Route::post('/adminvendor', [VendorController::class, 'store'])->name('adminvendor.store');
+Route::get('/adminvendor/{id}/edit', [VendorController::class, 'edit'])->name('adminvendor.edit');
+Route::put('/adminvendor/{id}', [VendorController::class, 'update'])->name('adminvendor.update');
+Route::delete('/adminvendor/{id}', [VendorController::class, 'destroy'])->name('adminvendor.destroy');
+
+// 🔥 VENDOR MENU
+Route::get('/vendor/menu', [VendorController::class, 'menu'])->name('vendor.menu');
+Route::post('/vendor/menu', [VendorController::class, 'storeMenu'])->name('vendor.menu.store');
+Route::put('/vendor/menu/{id}', [VendorController::class, 'updateMenu'])->name('vendor.menu.update');
+Route::delete('/vendor/menu/{id}', [VendorController::class, 'deleteMenu'])->name('vendor.menu.delete');
+
+// 🔥 VENDOR PESANAN
+Route::get('/vendor/pesanan', [VendorController::class, 'pesanan'])->name('vendor.pesanan');
+Route::post('/vendor/pesanan/{id}/lunas', [VendorController::class, 'lunas'])->name('vendor.pesanan.lunas');
+
+// Route::post('/checkout', [PesananController::class, 'store']);
+
+Route::get('/vendor/pesanan', [PesananController::class, 'index'])->name('vendor.pesanan');
+Route::post('/vendor/pesanan/{id}/lunas', [PesananController::class, 'lunas'])->name('vendor.pesanan.lunas');
+
+// menu
+Route::get('/get-menu/{idvendor}', function ($idvendor) {
+    // ambil menu berdasarkan vendor
+    $menu = Menu::where('idvendor', $idvendor)->get();
+    return response()->json($menu);
+});
+
+Route::post('/checkout', [PesananController::class, 'checkout']);
+Route::post('/midtrans/callback', [PesananController::class, 'callback']);
+Route::post('/bayar-sukses/{id}', [PesananController::class, 'bayarSukses']);

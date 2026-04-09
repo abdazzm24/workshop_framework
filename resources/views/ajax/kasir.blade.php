@@ -178,6 +178,7 @@ $(document).ready(function(){
     let total = 0
     let detail_penjualan = []
 
+    // tombol tambah ditekan
     $("#btn_tambah").click(function(){
 
         let kode = $("#kode_barang").val()
@@ -225,6 +226,7 @@ $(document).ready(function(){
 
     })
 
+    // tombol bayar ditekan
     $("#btn_bayar").click(function(){
 
         console.log("DATA DIKIRIM:", detail_penjualan)

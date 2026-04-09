@@ -42,60 +42,91 @@
                 </a>
                 </li>
 
+                <li class="nav-item" {{ Request::is('adminvendor.index') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('adminvendor.index') }}">
+                    <span class="menu-title">Vendor</span>
+                    <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                </a>
+                </li>
+
+                <!-- modul 4 -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('tabel.index') }}">
-                    <span class="menu-tittle">Tabel</span>
+                    <a class="nav-link" data-bs-toggle="collapse" href="#modul4"
+                    aria-expanded="false" aria-controls="modul4">
+                        <span class="menu-title">Modul 4</span>
+                        <i class="menu-arrow"></i>
                         <i class="mdi mdi-table menu-icon"></i>
                     </a>
+
+                    <div class="collapse" id="modul4">
+                        <ul class="nav flex-column sub-menu">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('tabel.index') }}">
+                                    Tabel
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('datatables.index') }}">
+                                    Datatables
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('select.index') }}">
+                                    Select
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('select2.index') }}">
+                                    Select 2
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
                 </li>
 
+                <!-- modul 5 -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('datatables.index') }}">
-                    <span class="menu-tittle">Datatables</span>
-                        <i class="mdi mdi-table-large menu-icon"></i>
+                    <a class="nav-link" data-bs-toggle="collapse" href="#modul5"
+                    aria-expanded="false" aria-controls="modul5">
+                        <span class="menu-title">Modul 5</span>
+                        <i class="menu-arrow"></i>
+                        <i class="mdi mdi-lightning-bolt menu-icon"></i>
                     </a>
-                </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('select.index') }}">
-                    <span class="menu-tittle">Select</span>
-                        <i class="mdi mdi-form-select menu-icon"></i>
-                    </a>
-                </li>
+                    <div class="collapse" id="modul5">
+                        <ul class="nav flex-column sub-menu">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('select2.index') }}">
-                    <span class="menu-tittle">Select 2</span>
-                        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-                    </a>
-                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('ajax.wilayah') }}">
+                                    Ajax Wilayah
+                                </a>
+                            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ajax.wilayah') }}">
-                        <span class="menu-title">Ajax Wilayah</span>
-                        <i class="mdi mdi-map menu-icon"></i>
-                    </a>
-                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('ajax.kasir') }}">
+                                    Ajax Kasir
+                                </a>
+                            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ajax.kasir') }}">
-                        <span class="menu-title">Ajax Kasir</span>
-                        <i class="mdi mdi-cart menu-icon"></i>
-                    </a>
-                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('axios.wilayah') }}">
+                                    Axios Wilayah
+                                </a>
+                            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('axios.wilayah') }}">
-                        <span class="menu-title">Axios Wilayah</span>
-                        <i class="mdi mdi-map-outline menu-icon"></i>
-                    </a>
-                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('axios.kasir') }}">
+                                    Axios Kasir
+                                </a>
+                            </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('axios.kasir') }}">
-                        <span class="menu-title">Axios Kasir</span>
-                        <i class="mdi mdi-cart-outline menu-icon"></i>
-                    </a>
+                        </ul>
+                    </div>
                 </li>
 
             </ul>

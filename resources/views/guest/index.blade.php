@@ -11,8 +11,8 @@
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold mb-0">Pesan Online</h3>
-            <small class="text-muted">Pesan makanan favoritmu lewat sini</small>
+            <h3 class="fw-bold mb-0">🍽️ Kantin Online</h3>
+            <small class="text-muted">Pesan makanan favoritmu dengan mudah</small>
         </div>
 
         {{-- ✅ TETAP ADA LOGIN --}}
@@ -28,7 +28,7 @@
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body">
 
-                    <h5 class="mb-4 fw-semibold">Pilih Pesanan</h5>
+                    <h5 class="mb-4 fw-semibold">🧾 Pilih Menu</h5>
 
                     <!-- Vendor -->
                     <div class="mb-3">
@@ -79,7 +79,7 @@
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body">
 
-                    <h5 class="mb-4 fw-semibold">Keranjang</h5>
+                    <h5 class="mb-4 fw-semibold">🛒 Keranjang</h5>
 
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
@@ -102,8 +102,8 @@
                         </h5>
 
                         <div>
-                            <button id="btnBayar" onclick="bayar()" class="btn btn-success px-4 py-2 rounded-3">
-                                Bayar
+                            <button onclick="bayar()" class="btn btn-success px-4 py-2 rounded-3">
+                                💳 Bayar
                             </button>
                         </div>
                     </div>
@@ -116,18 +116,6 @@
 </div>
 
 @endsection
-
-<script src="https://unpkg.com/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
-@if(config('midtrans.is_production'))
-    <script src="https://app.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('midtrans.client_key') }}">
-    </script>
-@else
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('midtrans.client_key') }}">
-    </script>
-@endif
 
 <script>
 
@@ -194,7 +182,6 @@ function tambahBarang() {
     keranjang.push({
         menu_id: menuId,
         qty: jumlah,
-        harga: harga,
         subtotal: subtotal
     });
 
@@ -216,11 +203,6 @@ function tambahBarang() {
     document.getElementById('tabelBarang').innerHTML += row;
     document.getElementById('total').innerText = "Rp " + total.toLocaleString();
 
-    if (jumlah <= 0) {
-        alert('Jumlah harus lebih dari 0!');
-        return;
-    }
-
 }
 
 function hapusItem(index, subtotal) {
@@ -230,14 +212,15 @@ function hapusItem(index, subtotal) {
     document.getElementById('row-' + index).remove();
     document.getElementById('total').innerText = "Rp " + total.toLocaleString();
 
-    let items = keranjang.filter(item => item != null);
+    keranjang.splice(index, 1);
 }
 
 function bayar() {
 
-    let btn = document.getElementById("btnBayar");
-    btn.disabled = true;
-    btn.innerHTML = "Memproses pembayaran...";
+    if (keranjang.length === 0) {
+        alert('Keranjang kosong!');
+        return;
+    }
 
     fetch('/checkout', {
         method: 'POST',
@@ -253,67 +236,10 @@ function bayar() {
     .then(res => res.json())
     .then(data => {
 
-        if(data.error){
-            alert(data.error);
-            btn.disabled = false;
-            btn.innerHTML = "Bayar";
-            return;
-        }
+        alert('Transaksi berhasil!');
+        location.reload();
 
-        snap.pay(data.snap_token, {
-            onSuccess: function(){
-                location.reload();
-            },
-            onPending: function(){
-
-                // ✅ Saat QRIS muncul, tunggu 5 detik lalu simulasi sukses
-                setTimeout(function(){
-                    snap.hide(); // tutup popup QRIS
-
-                    // buat popup manual tanpa library
-                    document.body.innerHTML += `
-                    <div id="popupSukses" style="
-                        position: fixed; top: 0; left: 0;
-                        width: 100%; height: 100%;
-                        background: rgba(0,0,0,0.6);
-                        display: flex; align-items: center;
-                        justify-content: center; z-index: 9999;
-                    ">
-                        <div style="
-                            background: white; border-radius: 16px;
-                            padding: 48px; text-align: center;
-                            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-                        ">
-                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="40" cy="40" r="38" stroke="#28a745" stroke-width="2"/>
-                                <polyline points="22,42 34,54 58,28" stroke="#28a745" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <h2 style="color: #28a745; margin: 16px 0 8px;">Pembayaran Berhasil!</h2>
-                            <p style="color: #666;">Pesanan kamu sedang diproses</p>
-                        </div>
-                    </div>
-                    `;
-
-                    // update status di database
-                    fetch('/bayar-sukses/' + data.order_id, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    });
-
-                    setTimeout(() => { location.reload(); }, 3000);
-
-                }, 5000); // 5 detik
-            },
-            onError: function(){
-                alert("Pembayaran gagal");
-                btn.disabled = false;
-                btn.innerHTML = "Bayar";
-            }
-        });
     });
 }
 
 </script>
-
