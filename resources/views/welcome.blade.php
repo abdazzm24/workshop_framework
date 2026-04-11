@@ -23,8 +23,35 @@
 
     <div class="row g-4">
 
+        <!-- 🔥 FORM CUSTOMER -->
+        <div class="card mb-4">
+            <div class="card-body">
+
+                <h5>Isi Data Customer</h5>
+
+                <input type="text" id="nama_customer" class="form-control mb-2" placeholder="Masukkan nama">
+
+                <!-- 🔥 TAMBAHAN: kamera lebih kecil -->
+                <video id="video" width="100%" height="180" autoplay class="mb-2 rounded"></video>
+                <!-- 🔥 TAMBAHAN: preview foto -->
+                <img id="preview" class="img-fluid mb-2 rounded" style="display:none; max-height:150px; object-fit:cover;">
+
+                <canvas id="canvas" style="display:none;"></canvas>
+
+
+                <button onclick="ambilFoto()" class="btn btn-secondary w-100 mb-2">
+                    Ambil Foto
+                </button>
+
+                <button onclick="simpanCustomer()" class="btn btn-success w-100">
+                    Mulai Pesan
+                </button>
+
+            </div>
+        </div>
+
         <!-- FORM -->
-        <div class="col-md-4">
+        <div id="formPesanan" class="col-md-4">
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body">
 
@@ -75,11 +102,17 @@
         </div>
 
         <!-- KERANJANG -->
-        <div class="col-md-8">
+        <div id="keranjangSection" class="col-md-8">
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body">
 
                     <h5 class="mb-4 fw-semibold">Keranjang</h5>
+
+                    <div class="mb-3">
+                        <strong>Customer:</strong>
+                        <span id="namaCustomerView" class="text-primary">-</span><br>
+                        <img id="fotoCustomerView" style="max-height:80px; display:none;" class="rounded">
+                    </div>
 
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
@@ -131,6 +164,99 @@
 
 <script>
 
+let customerId = null;
+
+// 🔥 AKTIFKAN KAMERA
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    document.getElementById('video').srcObject = stream;
+});
+
+// 🔥 AMBIL FOTO
+function ambilFoto() {
+    let canvas = document.getElementById('canvas');
+    let video = document.getElementById('video');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    canvas.getContext('2d').drawImage(video, 0, 0);
+
+    let foto = canvas.toDataURL('image/png');
+    let preview = document.getElementById('preview');
+
+    preview.src = foto;
+    preview.style.display = 'block';
+
+    alert('Foto berhasil diambil');
+}
+
+// 🔥 SIMPAN CUSTOMER
+function simpanCustomer() {
+
+    let nama = document.getElementById('nama_customer').value;
+    let canvas = document.getElementById('canvas');
+
+    if (!nama) {
+        alert('Nama wajib diisi!');
+        return;
+    }
+
+    let foto = canvas.toDataURL('image/png');
+
+    if (foto.length < 100) {
+        alert('Ambil foto dulu!');
+        return;
+    }
+
+    fetch('/customer/store-blob', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            nama: nama,
+            foto: foto
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        console.log(data);
+
+        if (!data.id) {
+            alert('Gagal ambil ID customer!');
+            return;
+        }
+        
+        customerId = data.id;
+
+        alert('Customer berhasil dibuat!');
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: 'Sekarang kamu bisa mulai pesan makanan'
+        });
+
+        document.getElementById('namaCustomerView').innerText = nama;
+
+        let preview = document.getElementById('preview');
+        let fotoView = document.getElementById('fotoCustomerView');
+
+        fotoView.src = preview.src;
+        fotoView.style.display = 'block';
+        
+        // Aktifkan form pemesanan
+        document.getElementById('formPesanan').style.pointerEvents = 'auto';
+        document.getElementById('keranjangSection').style.pointerEvents = 'auto';
+        document.getElementById('formPesanan').style.opacity = '1';
+        document.getElementById('keranjangSection').style.opacity = '1';
+
+    });
+}
+
 let total = 0;
 let menus = [];
 let keranjang = [];
@@ -164,7 +290,6 @@ function loadMenu() {
 function setHarga() {
 
     let menuId = document.getElementById('menu').value;
-
     // ✅ DIUBAH: idmenu
     let selected = menus.find(m => m.idmenu == menuId);
 
@@ -235,6 +360,18 @@ function hapusItem(index, subtotal) {
 
 function bayar() {
 
+    console.log("Customer ID:", customerId);
+    
+    if (!customerId) {
+        alert('Isi data customer dulu!');
+        return;
+    }
+
+    if (keranjang.length === 0) {
+        alert('Keranjang kosong!');
+        return;
+    }
+
     let btn = document.getElementById("btnBayar");
     btn.disabled = true;
     btn.innerHTML = "Memproses pembayaran...";
@@ -246,6 +383,7 @@ function bayar() {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         body: JSON.stringify({
+            customer_id: customerId,
             items: keranjang,
             total: total
         })
@@ -314,6 +452,14 @@ function bayar() {
         });
     });
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('formPesanan').style.pointerEvents = 'none';
+    document.getElementById('keranjangSection').style.pointerEvents = 'none';
+
+    document.getElementById('formPesanan').style.opacity = '0.5';
+    document.getElementById('keranjangSection').style.opacity = '0.5';
+});
 
 </script>
 

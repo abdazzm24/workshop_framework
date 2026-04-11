@@ -13,11 +13,18 @@ class Pesanan extends Model
         'nama',
         'total',
         'metode_bayar',
-        'status_bayar'
+        'status_bayar',
+        'customer_id'
     ];
 
     public function detailPesanan()
     {
         return $this->hasMany(DetailPesanan::class, 'idpesanan');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
 }

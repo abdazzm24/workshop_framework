@@ -19,6 +19,7 @@ class CheckoutController extends Controller
 
         // 🔥 SIMPAN PESANAN
         $pesanan = Pesanan::create([
+            'idcustomer' => $request->customer_id,
             'nama' => $namaCustomer,
             'total' => $request->total,
             'metode_bayar' => 'qris',

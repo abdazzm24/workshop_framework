@@ -11,6 +11,7 @@ use App\Http\Controllers\KasirController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\CustomerController;
 use App\Models\Buku;
 use App\Models\Kategori;
 use App\Models\Menu;
@@ -159,7 +160,15 @@ Route::get('/api/vendor', function () {return \App\Models\Vendor::all();});
 // ambil menu berdasarkan vendor
 Route::get('/api/menu/{idvendor}', function ($idvendor) {return \App\Models\Menu::where('idvendor', $idvendor)->get();});
     
-Route::get('/', function () {$vendors = \App\Models\Vendor::all();return view('welcome', compact('vendors'));})->name('welcome'); 
+Route::get('/', function () {
+
+    $vendors = \App\Models\Vendor::all();
+
+    $customers = \App\Models\Customer::all();
+
+    return view('welcome', compact('vendors', 'customers'));
+
+})->name('welcome');
     
 // ADMIN VENDOR (khusus admin)
 Route::get('/adminvendor', [VendorController::class, 'adminIndex'])->name('adminvendor.index');
@@ -168,6 +177,12 @@ Route::post('/adminvendor', [VendorController::class, 'store'])->name('adminvend
 Route::get('/adminvendor/{id}/edit', [VendorController::class, 'edit'])->name('adminvendor.edit');
 Route::put('/adminvendor/{id}', [VendorController::class, 'update'])->name('adminvendor.update');
 Route::delete('/adminvendor/{id}', [VendorController::class, 'destroy'])->name('adminvendor.destroy');
+Route::get('/admin/vendor', [VendorController::class, 'adminIndex'])->name('adminvendor.index');
+
+Route::get('/admin/vendor/{id}/pesanan', [VendorController::class, 'adminPesanan'])
+    ->name('adminvendor.pesanan');
+Route::get('/admin/vendor/{id}/pesanan/{pesanan}', [VendorController::class, 'adminPesananDetail'])
+    ->name('adminvendor.pesanan.detail');
 
 // 🔥 VENDOR MENU
 Route::get('/vendor/menu', [VendorController::class, 'menu'])->name('vendor.menu');
@@ -178,6 +193,8 @@ Route::delete('/vendor/menu/{id}', [VendorController::class, 'deleteMenu'])->nam
 // 🔥 VENDOR PESANAN
 Route::get('/vendor/pesanan', [VendorController::class, 'pesanan'])->name('vendor.pesanan');
 Route::post('/vendor/pesanan/{id}/lunas', [VendorController::class, 'lunas'])->name('vendor.pesanan.lunas');
+Route::get('/vendor/pesanan/{id}', [VendorController::class, 'show'])->name('vendor.pesanan.show');
+Route::get('/vendor/pesanan/{id}/struk', [VendorController::class, 'struk'])->name('vendor.pesanan.struk');
 
 // Route::post('/checkout', [PesananController::class, 'store']);
 
@@ -194,3 +211,18 @@ Route::get('/get-menu/{idvendor}', function ($idvendor) {
 Route::post('/checkout', [PesananController::class, 'checkout']);
 Route::post('/midtrans/callback', [PesananController::class, 'callback']);
 Route::post('/bayar-sukses/{id}', [PesananController::class, 'bayarSukses']);
+
+// customer
+Route::prefix('customer')->group(function () {
+
+    Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+
+    // 🔥 BLOB (kamera)
+    Route::get('/create-blob', [CustomerController::class, 'createBlob'])->name('customer.createBlob');
+    Route::post('/store-blob', [CustomerController::class, 'storeBlob'])->name('customer.storeBlob');
+
+    // 🔥 FILE
+    Route::get('/create-file', [CustomerController::class, 'createFile'])->name('customer.createFile');
+    Route::post('/store-file', [CustomerController::class, 'storeFile'])->name('customer.storeFile');
+
+});

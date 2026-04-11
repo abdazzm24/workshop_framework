@@ -57,13 +57,23 @@
                 @if($p->status_bayar == 1)
                     <span class="badge bg-success">Lunas</span>
                 @else
-                    <span class="badge bg-warning">Pending</span>
+                    <span class="badge bg-warning text-dark">Pending</span>
+
+                    {{-- tombol kecil, setara badge --}}
+                    <form action="{{ route('vendor.pesanan.lunas', $p->idpesanan) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="badge bg-success border-0">
+                            Tandai Lunas
+                        </button>
+                    </form>
                 @endif
             </td>
 
             <td>
-                {{-- nanti bisa detail --}}
-                -
+                <a href="{{ route('vendor.pesanan.show', $p->idpesanan) }}" 
+                class="badge bg-primary text-decoration-none">
+                    Detail
+                </a>
             </td>
         </tr>
         @endforeach

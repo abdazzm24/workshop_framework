@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use App\Models\DetailPesanan;
+use App\Models\Customer;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Illuminate\Support\Facades\Auth;
@@ -71,14 +72,25 @@ class PesananController extends Controller
             Config::$isSanitized = true;
             Config::$is3ds = true;
 
-            // 🔥 AUTO NAMA
-            $last = Pesanan::max('idpesanan') ?? 0;
-            $kode = str_pad($last + 1, 4, '0', STR_PAD_LEFT);
-            $namaCustomer = 'Guest_' . $kode;
+            // ambil customer dari request
+            $customer = Customer::find($request->customer_id);
+
+            // fallback kalau tidak pilih customer
+            if ($customer) {
+                $namaCustomer = $customer->nama;
+                $customerId = $customer->id;
+            } else {
+                // fallback guest
+                $last = Pesanan::max('idpesanan') ?? 0;
+                $kode = str_pad($last + 1, 4, '0', STR_PAD_LEFT);
+                $namaCustomer = 'Guest_' . $kode;
+                $customerId = null;
+            }
 
             // 🔥 SIMPAN PESANAN
             $pesanan = Pesanan::create([
                 'nama' => $namaCustomer,
+                'customer_id' => $customerId,
                 'total' => (int) $request->total,
                 'metode_bayar' => 'qris',
                 'status_bayar' => 1

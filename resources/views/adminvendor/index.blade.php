@@ -37,9 +37,14 @@
             <td>{{ $v->user->email ?? '-' }}</td> {{-- 🔥 relasi user --}}
 
             <td>
+                <a href="{{ route('adminvendor.pesanan', $v->idvendor) }}"
+                   class="btn btn-info btn-sm">
+                    Detail
+                </a>
+                
                 <a href="{{ route('adminvendor.edit', $v->idvendor) }}"
-                   class="btn btn-gradient-warning btn-sm">
-                    <i class="mdi mdi-pencil"></i>
+                   class="btn btn-warning btn-sm">
+                    Edit
                 </a>
 
                 <button onclick="deleteVendor({{ $v->idvendor }})"

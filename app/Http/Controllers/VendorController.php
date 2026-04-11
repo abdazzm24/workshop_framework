@@ -7,7 +7,12 @@ use App\Models\Vendor;
 use App\Models\User;
 use App\Models\Menu;
 use App\Models\Penjualan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 
 class VendorController extends Controller
 {
@@ -87,6 +92,28 @@ class VendorController extends Controller
             ->with('success', 'Vendor berhasil dihapus');
     }
 
+    public function adminPesanan($id)
+    {
+        $vendor = Vendor::findOrFail($id);
+
+        $pesanan = \App\Models\Pesanan::with('detailPesanan.menu')
+            ->latest()
+            ->get();
+
+        return view('adminvendor.pesanan', compact('vendor', 'pesanan'));
+    }
+
+    public function adminPesananDetail($id, $pesananId)
+    {
+        $vendor = Vendor::findOrFail($id);
+
+        $pesanan = \App\Models\Pesanan::with('detailPesanan.menu')
+            ->where('idpesanan', $pesananId)
+            ->firstOrFail();
+
+        return view('adminvendor.pesanan-detail', compact('vendor', 'pesanan'));
+    }
+
 
     // =========================
     // 🔥 VENDOR (DASHBOARD)
@@ -156,5 +183,50 @@ class VendorController extends Controller
         $pesanan = $query->latest()->get();
 
         return view('vendor.pesanan', compact('pesanan'));
+    }
+
+    public function show($id)
+    {
+        $pesanan = \App\Models\Pesanan::with('detailPesanan.menu')
+            ->where('idpesanan', $id)
+            ->firstOrFail();
+
+        return view('vendor.pesanan-detail', compact('pesanan'));
+    }
+
+    public function lunas($id)
+    {
+        $pesanan = \App\Models\Pesanan::findOrFail($id);
+        $pesanan->status_bayar = 1;
+        $pesanan->save();
+
+        return redirect()->back()->with('success', 'Pesanan berhasil ditandai lunas');
+    }
+
+    public function struk($id)
+    {
+        $pesanan = \App\Models\Pesanan::with('detailPesanan.menu', 'customer')
+            ->where('idpesanan', $id)
+            ->firstOrFail();
+
+        $generator = new BarcodeGeneratorPNG();
+        $barcode = base64_encode(
+            $generator->getBarcode($pesanan->idpesanan, $generator::TYPE_CODE_128)
+        );
+
+        // 🔥 QR CODE (INI YANG DITAMBAHKAN)
+        $qr = new QrCode($pesanan->idpesanan);
+
+        $writer = new PngWriter();
+        $result = $writer->write($qr);
+
+        $qrcode = base64_encode($result->getString());
+
+        $pdf = Pdf::loadView(
+            'vendor.struk-pesanan',
+            compact('pesanan', 'barcode', 'qrcode')
+        );
+
+        return $pdf->stream('struk-pesanan.pdf');
     }
 }
