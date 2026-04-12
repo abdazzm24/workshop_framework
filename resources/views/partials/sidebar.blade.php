@@ -49,6 +49,13 @@
                 </a>
                 </li>
 
+                <li class="nav-item" {{ Request::is('customer.index') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('customer.index') }}">
+                    <span class="menu-title">Customer</span>
+                    <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                </a>
+                </li>
+
                 <!-- modul 4 -->
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#modul4"

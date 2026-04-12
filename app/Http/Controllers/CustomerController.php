@@ -36,6 +36,11 @@ class CustomerController extends Controller
             // simpan ke database (BLOB)
             $customer = Customer::create([
                 'nama' => $request->nama,
+                'alamat' => $request->alamat,
+                'provinsi' => $request->provinsi,
+                'kota' => $request->kota,
+                'kecamatan' => $request->kecamatan,
+                'kodepos' => $request->kodepos,
                 'foto_blob' => $request->foto
             ]);
 
@@ -69,6 +74,11 @@ class CustomerController extends Controller
 
         Customer::create([
             'nama' => $request->nama,
+            'alamat' => $request->alamat,
+            'provinsi' => $request->provinsi,
+            'kota' => $request->kota,
+            'kecamatan' => $request->kecamatan,
+            'kodepos' => $request->kodepos,
             'foto_path' => $filename
         ]);
 
