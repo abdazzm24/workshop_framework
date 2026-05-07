@@ -20,7 +20,7 @@ class DetailPesanan extends Model
 
     public function menu()
     {
-        return $this->belongsTo(Menu::class, 'idmenu');
+        return $this->belongsTo(Menu::class, 'idmenu', 'idmenu');
     }
 
     public function pesanan()

@@ -136,6 +136,17 @@ Route::get('/api/kecamatan/{id}', function ($id) {$response = Http::get("https:/
 // kelurahan
 Route::get('/api/kelurahan/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$id.json");return $response->json();});
 
+// API cari barang berdasarkan barcode
+Route::get('/api/barang/{id_barang}', function ($id_barang) {
+    $barang = \App\Models\Barang::where('id_barang', $id_barang)->first();
+    
+    if (!$barang) {
+        return response()->json(['error' => 'Barang tidak ditemukan'], 404);
+    }
+    
+    return response()->json($barang);
+});
+
 // api barang
 Route::get('/api/barang', function () {
     $barang = DB::table('barang')->get();
@@ -226,3 +237,29 @@ Route::prefix('customer')->group(function () {
     Route::post('/store-file', [CustomerController::class, 'storeFile'])->name('customer.storeFile');
 
 });
+
+// Halaman scanner barcode
+Route::get('/scan-barcode', function () {
+    return view('scan-barcode');
+})->name('scan.barcode');
+
+// Halaman QR Code customer
+Route::get('/qrcode-saya', function () {
+    return view('qrcode-saya');
+})->name('qrcode.saya');
+
+// API detail pesanan berdasarkan idpesanan
+Route::get('/api/pesanan/{id}', function ($id) {
+    $pesanan = \App\Models\Pesanan::with('detailPesanan.menu')->find($id);
+    
+    if (!$pesanan) {
+        return response()->json(['error' => 'Pesanan tidak ditemukan'], 404);
+    }
+    
+    return response()->json($pesanan);
+});
+
+// Halaman scan QR vendor
+Route::get('/vendor/scan-qr', function () {
+    return view('vendor.scan-qr');
+})->name('vendor.scan.qr');

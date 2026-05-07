@@ -67,6 +67,15 @@
             </div>
         </a>
     </div>
+    
+    <div class="col-md-6 mb-3">
+        <a href="{{ route('vendor.scan.qr') }}" class="text-decoration-none">
+            <div class="card bg-gradient-danger text-white text-center p-4">
+                <i class="mdi mdi-qrcode-scan mdi-48px"></i>
+                <h5 class="mt-3">Scan QR Customer</h5>
+            </div>
+        </a>
+    </div>
 
 </div>
 

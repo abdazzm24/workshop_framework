@@ -152,9 +152,13 @@
     </div>
 </div>
 
+
+
 @endsection
 
 <script src="https://unpkg.com/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 @if(config('midtrans.is_production'))
     <script src="https://app.midtrans.com/snap/snap.js"
@@ -336,33 +340,67 @@ function bayar() {
         snap.pay(data.snap_token, {
             onSuccess: function() { location.reload(); },
             onPending: function() {
-                setTimeout(function() {
+                setTimeout(function(){
                     snap.hide();
 
-                    document.body.innerHTML += `
-                    <div id="popupSukses" style="
-                        position:fixed; top:0; left:0;
-                        width:100%; height:100%;
-                        background:rgba(0,0,0,0.6);
-                        display:flex; align-items:center;
-                        justify-content:center; z-index:9999;
-                    ">
-                        <div style="background:white; border-radius:16px; padding:48px; text-align:center;">
-                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                                <circle cx="40" cy="40" r="38" stroke="#28a745" stroke-width="2"/>
-                                <polyline points="22,42 34,54 58,28" stroke="#28a745" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <h2 style="color:#28a745; margin:16px 0 8px;">Pembayaran Berhasil!</h2>
-                            <p style="color:#666;">Pesanan kamu sedang diproses</p>
-                        </div>
-                    </div>`;
+                    // Simpan idpesanan ke localStorage agar bisa diakses lagi
+                    localStorage.setItem('last_order_id', data.order_id);
 
+                    // Update status lunas di database
                     fetch('/bayar-sukses/' + data.order_id, {
                         method: 'POST',
                         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                     });
 
-                    setTimeout(() => { location.reload(); }, 3000);
+                    // Tampilkan popup sukses + QR Code
+                    document.body.innerHTML += `
+                    <div id="popupSukses" style="
+                        position: fixed; top: 0; left: 0;
+                        width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.7);
+                        display: flex; align-items: center;
+                        justify-content: center; z-index: 9999;
+                    ">
+                        <div style="
+                            background: white; border-radius: 16px;
+                            padding: 40px; text-align: center;
+                            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                            max-width: 360px; width: 90%;
+                        ">
+                            <svg width="72" height="72" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="38" stroke="#28a745" stroke-width="2"/>
+                                <polyline points="22,42 34,54 58,28" stroke="#28a745" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <h3 style="color:#28a745; margin:16px 0 4px;">Pembayaran Berhasil!</h3>
+                            <p style="color:#666; font-size:14px;">Tunjukkan QR Code ini ke vendor</p>
+
+                            <!-- QR Code muncul disini -->
+                            <div id="qrcode-popup" style="
+                                display: inline-block;
+                                margin: 16px 0;
+                                padding: 12px;
+                                border: 1px solid #eee;
+                                border-radius: 8px;
+                            "></div>
+
+                            <p style="color:#999; font-size:12px;">Order ID: #${data.order_id}</p>
+
+                            <a href="/qrcode-saya" style="
+                                display:block; margin-top:8px;
+                                color:#007bff; font-size:13px;
+                            ">Simpan QR Code saya →</a>
+                        </div>
+                    </div>
+                    `;
+
+                    // Generate QR Code
+                    new QRCode(document.getElementById("qrcode-popup"), {
+                        text: String(data.order_id),
+                        width: 180,
+                        height: 180
+                    });
+
                 }, 5000);
             },
             onError: function() {

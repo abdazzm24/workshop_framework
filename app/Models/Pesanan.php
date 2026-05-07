@@ -19,7 +19,7 @@ class Pesanan extends Model
 
     public function detailPesanan()
     {
-        return $this->hasMany(DetailPesanan::class, 'idpesanan');
+        return $this->hasMany(DetailPesanan::class, 'idpesanan', 'idpesanan');
     }
 
     public function customer()

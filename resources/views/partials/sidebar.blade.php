@@ -41,6 +41,13 @@
                     <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                 </a>
                 </li>
+                
+                <li class="nav-item" {{ Request::is('scan.barcode') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('scan.barcode') }}">
+                    <span class="menu-title">Scan Barcode</span>
+                    <i class="mdi mdi-barcode-scan menu-icon"></i>
+                </a>
+                </li>
 
                 <li class="nav-item" {{ Request::is('adminvendor.index') ? 'active' : '' }}>
                 <a class="nav-link" href="{{ route('adminvendor.index') }}">
