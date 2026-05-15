@@ -12,6 +12,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\KunjunganController;
 use App\Models\Buku;
 use App\Models\Kategori;
 use App\Models\Menu;
@@ -263,3 +264,20 @@ Route::get('/api/pesanan/{id}', function ($id) {
 Route::get('/vendor/scan-qr', function () {
     return view('vendor.scan-qr');
 })->name('vendor.scan.qr');
+
+
+// List toko & tambah toko
+Route::get('/kunjungan',        [KunjunganController::class, 'index'])->name('kunjungan.index');
+Route::get('/kunjungan/create', [KunjunganController::class, 'create'])->name('kunjungan.create');
+Route::post('/kunjungan',       [KunjunganController::class, 'store'])->name('kunjungan.store');
+Route::delete('/kunjungan/{barcode}', [KunjunganController::class, 'destroy'])->name('kunjungan.destroy');
+
+// Scan kunjungan
+Route::get('/scan-kunjungan',   [KunjunganController::class, 'scan'])->name('kunjungan.scan');
+
+// Cetak barcode toko (print label)
+Route::get('/kunjungan/{barcode}/cetak', [KunjunganController::class, 'cetakBarcode'])->name('kunjungan.cetak');
+
+// API — dipanggil dari JavaScript
+Route::get('/api/toko/{barcode}',  [KunjunganController::class, 'apiToko']);
+Route::post('/api/kunjungan/simpan', [KunjunganController::class, 'simpanKunjungan']);

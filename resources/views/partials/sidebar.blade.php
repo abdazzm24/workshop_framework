@@ -49,6 +49,20 @@
                 </a>
                 </li>
 
+                <li class="nav-item" {{ Request::is('kunjungan.index') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('kunjungan.index') }}">
+                    <span class="menu-title">Kunjungan</span>
+                    <i class="mdi mdi-store menu-icon"></i>
+                </a>
+                </li>
+
+                <li class="nav-item" {{ Request::is('kunjungan.scan') ? 'active' : '' }}>
+                <a class="nav-link" href="{{ route('kunjungan.scan') }}">
+                    <span class="menu-title">Scan Kunjungan</span>
+                    <i class="mdi mdi-map-marker-radius menu-icon"></i>
+                </a>
+                </li>
+
                 <li class="nav-item" {{ Request::is('adminvendor.index') ? 'active' : '' }}>
                 <a class="nav-link" href="{{ route('adminvendor.index') }}">
                     <span class="menu-title">Vendor</span>
