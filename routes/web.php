@@ -13,6 +13,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\KunjunganController;
+use App\Http\Controllers\AntrianController;
 use App\Models\Buku;
 use App\Models\Kategori;
 use App\Models\Menu;
@@ -281,3 +282,21 @@ Route::get('/kunjungan/{barcode}/cetak', [KunjunganController::class, 'cetakBarc
 // API — dipanggil dari JavaScript
 Route::get('/api/toko/{barcode}',  [KunjunganController::class, 'apiToko']);
 Route::post('/api/kunjungan/simpan', [KunjunganController::class, 'simpanKunjungan']);
+
+
+// Halaman publik — tidak perlu login
+Route::get('/guest',         [AntrianController::class, 'guest'])->name('antrian.guest');
+Route::post('/guest/daftar', [AntrianController::class, 'daftar'])->name('antrian.daftar');
+Route::get('/antrian/tiket/{id}', [AntrianController::class, 'tiket'])->name('antrian.tiket');
+
+// Admin antrian — tidak perlu login (sesuai permintaan)
+Route::get('/antrian',              [AntrianController::class, 'admin'])->name('antrian.admin');
+Route::post('/antrian/panggil',     [AntrianController::class, 'panggil'])->name('antrian.panggil');
+Route::post('/antrian/terlambat',   [AntrianController::class, 'terlambat'])->name('antrian.terlambat');
+Route::post('/antrian/panggil-terlambat', [AntrianController::class, 'panggilTerlambat'])->name('antrian.panggilTerlambat');
+
+// Papan antrian publik
+Route::get('/papan', [AntrianController::class, 'papan'])->name('antrian.papan');
+
+// SSE endpoint — koneksi stream real-time
+Route::get('/sse/antrian', [AntrianController::class, 'stream'])->name('antrian.stream');

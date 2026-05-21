@@ -107,13 +107,5 @@ function hapusToko(barcode) {
     }
 }
 
-$(document).ready(function() {
-    $('#tableToko').DataTable({
-        pageLength: 10,
-        lengthMenu: [5, 10, 25],
-        ordering: true,
-        searching: true,
-    });
-});
 </script>
 @endsection
